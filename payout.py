@@ -125,7 +125,8 @@ for b in blocks["data"]["blocks"]:
     # Let's run some checks to ensure we don't pay out more than we got, or find bugs ;)
     if "feeTransfer" not in b["transactions"]:
         # Just coinbase so we can't pay out more than the coinbase. We also may have an orphaned block.
-        assert total_rewards <= int(b["transactions"]["coinbase"])
+        #TODO assert total_rewards <= int(b["transactions"]["coinbase"])
+        pass
     else:
         # There were some fee transfers so let's _really_ make sure we don't pay out more than we received
         #TODO check that what we received in b["transactions"]["feeTransfer"] for this public key is more or equal to payout
