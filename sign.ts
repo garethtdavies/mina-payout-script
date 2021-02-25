@@ -4,6 +4,7 @@ import * as fs from "fs";
 /* Get these payouts from the first stage - load them from a file or whatever... */
 let payouts = [{'publicKey': 'B62qkbdgRRJJfqcyVd23s9tgCkNYuGMCmZHKijnJGqYgs9N3UdjcRtR', 'total': 4644003513}];
 
+/* Key management is left as an exercise to the reader :) */
 let keys = {
   privateKey: process.env.PRIVATE_KEY,
   publicKey: process.env.PUBLIC_KEY,
