@@ -126,6 +126,7 @@ for b in blocks["data"]["blocks"]:
     if "feeTransfer" not in b["transactions"]:
         # Just coinbase so we can't pay out more than the coinbase. We also may have an orphaned block.
         #TODO assert total_rewards <= int(b["transactions"]["coinbase"])
+        print("no fees")
         pass
     else:
         # There were some fee transfers so let's _really_ make sure we don't pay out more than we received
