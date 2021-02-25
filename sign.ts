@@ -10,7 +10,7 @@ let keys = {
   publicKey: process.env.PUBLIC_KEY,
 };
 
-/* You need to manually set the nonce */
+/* Manually set the starting nonce which we will increment - see `coda advanced get-nonce -address` */
 let nonce = 657;
 
 /* Send a payment */
