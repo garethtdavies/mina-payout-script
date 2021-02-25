@@ -2,7 +2,7 @@ This is a proof of concept implementation of this [staking calculation](https://
 
 Note, it uses APIs from MinaExplorer so isn't generally applicable. A better version using a local archive node is coming...
 
-To run, change the settings to your requirements in `payout.py` specifying at least a public key and ledger hash.
+To run, change the settings to your requirements in `payout.py` specifying at least a public key and ledger hash. It uses a fee of 5% but update if yours is different.
 
 ```
 pip3 install -r requirements.txt
