@@ -1,4 +1,4 @@
-# From https://github.com/MinaProtocol/coda-python-client
+# Credit: https://github.com/MinaProtocol/coda-python-client
 
 import requests
 
