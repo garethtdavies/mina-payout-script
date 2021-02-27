@@ -1,5 +1,3 @@
-# Credit: https://github.com/MinaProtocol/coda-python-client
-
 import requests
 
 
@@ -24,14 +22,10 @@ def _graphql_request(query: str, variables: dict = {}):
     if variables:
         payload = {**payload, 'variables': variables}
 
-    headers = {
-        "Accept":
-        "application/json"
-    }
-    response = requests.post(
-        "https://graphql.minaexplorer.com",
-        json=payload,
-        headers=headers)
+    headers = {"Accept": "application/json"}
+    response = requests.post("https://graphql.minaexplorer.com",
+                             json=payload,
+                             headers=headers)
     resp_json = response.json()
     if response.status_code == 200 and "errors" not in resp_json:
         return resp_json
@@ -69,7 +63,7 @@ def getStakingLedger(variables):
 def getBlocks(variables):
     """Returns all blocks the pool won"""
     query = """query($creator: String!, $epoch: Int, $blockHeightMin: Int, $blockHeightMax: Int, $dateTimeMin: DateTime, $dateTimeMax: DateTime){
-  blocks(query: {creator: $creator, protocolState: {consensusState: {epoch: $epoch}}, canonical: true, blockHeight_gte: $blockHeightMin, blockHeight_lte: $blockHeightMax, dateTime_gte:$dateTimeMin, dateTime_lte:$dateTimeMax}, sortBy: DATETIME_DESC) {
+  blocks(query: {creator: $creator, protocolState: {consensusState: {epoch: $epoch}}, canonical: true, blockHeight_gte: $blockHeightMin, blockHeight_lte: $blockHeightMax, dateTime_gte:$dateTimeMin, dateTime_lte:$dateTimeMax, transactions: {userCommands: {from_ne: $creator}}, snarkJobs: {prover_ne: $creator}}, sortBy: DATETIME_DESC) {
     blockHeight
     canonical
     creator
@@ -110,3 +104,4 @@ def getLatestHeight():
 }"""
 
     return (_graphql_request(query))
+    
