@@ -106,6 +106,9 @@ for b in blocks["data"]["blocks"]:
     # Keep a log of all blocks we processed
     blocks_included.append(b["blockHeight"])
 
+    # This will always be defined even if it pays to the creator
+    coinbase_receiver = b["transactions"]["coinbaseReceiverAccount"]["publicKey"]
+
     sum_effective_pool_stakes = 0
     effective_pool_stakes = {}
 
@@ -124,14 +127,20 @@ for b in blocks["data"]["blocks"]:
 
     # Let's run some checks to ensure we don't pay out more than we got, or find bugs ;)
     if "feeTransfer" not in b["transactions"]:
-        # Just coinbase so we can't pay out more than the coinbase. We also may have an orphaned block.
-        #TODO assert total_rewards <= int(b["transactions"]["coinbase"])
-        print("no fees")
-        pass
+        # Just coinbase
+        assert total_rewards == int(b["transactions"]["coinbase"])
     else:
         # There were some fee transfers so let's _really_ make sure we don't pay out more than we received
-        #TODO check that what we received in b["transactions"]["feeTransfer"] for this public key is more or equal to payout
-        pass
+        fee_transfers = b["transactions"]["feeTransfer"]
+        bp_fee_transfers = [d for d in fee_transfers if d['recipient'] == coinbase_receiver]
+        sum_bp_fee_transfers = sum(int(item['fee']) for item in bp_fee_transfers)
+
+        # So assert that the value we are paying out is equal to what we received
+        total_rewards_fee_transfer = int(b["transactions"]["coinbase"]) + sum_bp_fee_transfers
+        # There is an issue here with the type `fee_transfer_via_coinbase` as we actually need to subtract
+        # this from the amount to get the amount we received via fee transfers. We can't get this via GraphQL
+        # so the best we can do is assert we are playing equal or less than this amount
+        assert(total_rewards <= total_rewards_fee_transfer)
 
     # Loop through our list of delegates to determine the weighting per block
     for p in payouts:
