@@ -1,3 +1,5 @@
+## Do not use this please see the implementation here that is maintained https://github.com/jrwashburn/mina-pool-payout
+
 This is a proof of concept implementation of this [staking calculation](https://docs.minaexplorer.com/minaexplorer/calculating-payments). 
 
 Note, it uses APIs from MinaExplorer so isn't generally applicable. A better version using a local archive node is coming...
