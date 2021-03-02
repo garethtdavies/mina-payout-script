@@ -104,4 +104,3 @@ def getLatestHeight():
 }"""
 
     return (_graphql_request(query))
-    
