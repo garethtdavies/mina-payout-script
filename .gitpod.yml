@@ -3,6 +3,7 @@ image:
 
 tasks:
   - init: pip3 install -r requirements.txt
+  - init: npm install
 
 github:
   prebuilds:
