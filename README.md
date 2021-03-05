@@ -1,4 +1,6 @@
-## Do not use this please see the implementation here that is maintained https://github.com/jrwashburn/mina-pool-payout
+## Warning
+
+This implementation relies on data from Minaexplorer.com. A more generally applicable version that takes in a staking ledger and uses the archive node is available here https://github.com/jrwashburn/mina-pool-payout and is recommended.
 
 This is a proof of concept implementation of this [staking calculation](https://docs.minaexplorer.com/minaexplorer/calculating-payments). 
 
