@@ -1,3 +1,5 @@
+# These functions are not used but indicate how the values retrieved from the API are determined
+
 def timed_weighting(ledger, global_slot_start, slots_per_epoch):
     """Takes in a staking ledger and determines the timed factor for the account"""
     if not ledger["timing"]:
@@ -15,7 +17,6 @@ def timed_weighting(ledger, global_slot_start, slots_per_epoch):
             return ((global_slot_end - timed_end) / slots_per_epoch)
 
 
-# This function is unused but how I pre-ccalculated the timing data for the ledger
 def calculate_end_slot_timed_balance(timing):
 
     if timing["vesting_period"] == 0 or timing["vesting_increment"] == 0:
