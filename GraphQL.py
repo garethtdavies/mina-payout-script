@@ -49,6 +49,7 @@ def getStakingLedger(variables):
       initial_minimum_balance
       timed_epoch_end
       timed_in_epoch
+      timed_weighting
       untimed_slot
       vesting_increment
       vesting_period

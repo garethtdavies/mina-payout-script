@@ -18,13 +18,14 @@ client = Mongo.Mongo()
 ################################################################
 # Define the payout calculation here
 ################################################################
-public_key = "B62qp2K4i6oSoNtKk34nothCJcjCwwjjdfjQhnmt6xuduAfj7EnahVy"
-ledger_hash = "jxu7QaqhwT2jjfrDeBL22jyyV61hn4DkBzsULZbMF9vhcpYxnRy"
-staking_epoch = 0
-global_slot_start = 0
-min_height = 0  # This can be the last known payout or this could vary the query to be a starting date
+public_key = "B62qpge4uMq4Vv5Rvc8Gw9qSquUYd6xoW1pz7HQkMSHm6h1o7pvLPAN"  # Public key of the block producer
+ledger_hash = "jwZo52UWRRqX6Uj8kSuBbvDWDQAiLpuZBWSAdFNGHq73J7a9Rie"  # The ledger hash to use for calculations
+staking_epoch = 0  # To ensure we only get blocks from the current staking epoch as the ledger may be different
+fee = 0.05  # The fee percentage to charge
+min_height = 602  # This can be the last known payout or this could vary the query to be a starting date
 confirmations = 0  # Can set this to any value for min confirmations up to `k`
-slots_per_epoch = 7140
+
+# Get the latest block height from MinaExplorer
 latest_block = GraphQL.getLatestHeight()
 
 if not latest_block:
@@ -39,7 +40,7 @@ assert max_height <= latest_block["data"]["blocks"][0]["blockHeight"]
 
 print(f"This script will payout from blocks {min_height} to {max_height}")
 
-# Initialize some stuff
+# Initialize variables
 total_staking_balance = 0
 payouts = []
 all_blocks_total_rewards = 0
@@ -60,6 +61,13 @@ if not staking_ledger["data"]["stakes"]:
     exit("We have no stakers")
 
 for s in staking_ledger["data"]["stakes"]:
+    
+    # Clean up timed weighting if no timing info
+    if not s["timing"]:
+        timed_weighting = 1
+    else:
+        timed_weighting = s["timing"]["timed_weighting"]
+    
     payouts.append({
         "publicKey":
         s["public_key"],
@@ -67,8 +75,7 @@ for s in staking_ledger["data"]["stakes"]:
         0,
         "staking_balance":
         s["balance"],
-        "timed_weighting":
-        Staking.timed_weighting(s, global_slot_start, slots_per_epoch)
+        "timed_weighting": timed_weighting
     })
     total_staking_balance += s["balance"]
 
@@ -139,7 +146,8 @@ for b in blocks["data"]["blocks"]:
         total_rewards_fee_transfer = int(b["transactions"]["coinbase"]) + sum_bp_fee_transfers
         # There is an issue here with the type `fee_transfer_via_coinbase` as we actually need to subtract
         # this from the amount to get the amount we received via fee transfers. We can't get this via GraphQL
-        # so the best we can do is assert we are playing equal or less than this amount
+        # so the best we can do is assert we are playing equal or less than this amount. This will be updated when
+        # the fix is landed.
         assert(total_rewards <= total_rewards_fee_transfer)
 
     # Loop through our list of delegates to determine the weighting per block
