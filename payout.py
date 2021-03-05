@@ -9,9 +9,7 @@
 from tabulate import tabulate
 import Currency
 import GraphQL
-import Staking
 import Mongo
-import datetime
 
 client = Mongo.Mongo()
 
