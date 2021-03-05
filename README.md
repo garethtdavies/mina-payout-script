@@ -1,4 +1,4 @@
-## Warning
+## MinaExplorer Payout Script
 
 This implementation relies on data from Minaexplorer.com. A more generally applicable version that takes in a staking ledger and uses the archive node is available here https://github.com/jrwashburn/mina-pool-payout and is recommended.
 
@@ -31,4 +31,4 @@ Our fee is is 72.173564000 mina
 [{'publicKey': 'B62qp2K4i6oSoNtKk34nothCJcjCwwjjdfjQhnmt6xuduAfj7EnahVy', 'total': 1371297716000}]
 ```
 
-Take the output to a different machine to sign (coming soon).
+Take the output to a different machine to sign - see `sign.ts` for an example.
