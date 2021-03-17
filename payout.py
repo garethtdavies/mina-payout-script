@@ -17,7 +17,7 @@ client = Mongo.Mongo()
 # Define the payout calculation here
 ################################################################
 public_key = "B62qpge4uMq4Vv5Rvc8Gw9qSquUYd6xoW1pz7HQkMSHm6h1o7pvLPAN"  # Public key of the block producer
-ledger_hash = "jwZo52UWRRqX6Uj8kSuBbvDWDQAiLpuZBWSAdFNGHq73J7a9Rie"  # The ledger hash to use for calculations
+ledger_hash = "jwkHcod9dcnhGfYx7t6yabSfckrKVwD6TJECs6oPSL8teYQE37Y"  # The ledger hash to use for calculations
 staking_epoch = 0  # To ensure we only get blocks from the current staking epoch as the ledger may be different
 fee = 0.05  # The fee percentage to charge
 min_height = 602  # This can be the last known payout or this could vary the query to be a starting date
@@ -61,7 +61,7 @@ if not staking_ledger["data"]["stakes"]:
 for s in staking_ledger["data"]["stakes"]:
     
     # Clean up timed weighting if no timing info
-    if not s["timing"]:
+    if not s["timing"] or not s["timing"]["timed_weighting"]:
         timed_weighting = 1
     else:
         timed_weighting = s["timing"]["timed_weighting"]
