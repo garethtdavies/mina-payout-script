@@ -20,7 +20,7 @@ public_key = "B62qpge4uMq4Vv5Rvc8Gw9qSquUYd6xoW1pz7HQkMSHm6h1o7pvLPAN"  # Public
 ledger_hash = "jwkHcod9dcnhGfYx7t6yabSfckrKVwD6TJECs6oPSL8teYQE37Y"  # The ledger hash to use for calculations
 staking_epoch = 0  # To ensure we only get blocks from the current staking epoch as the ledger may be different
 fee = 0.05  # The fee percentage to charge
-min_height = 602  # This can be the last known payout or this could vary the query to be a starting date
+min_height = 1  # This can be the last known payout or this could vary the query to be a starting date
 confirmations = 0  # Can set this to any value for min confirmations up to `k`
 
 # Get the latest block height from MinaExplorer
@@ -65,6 +65,11 @@ for s in staking_ledger["data"]["stakes"]:
         timed_weighting = 1
     else:
         timed_weighting = s["timing"]["timed_weighting"]
+    
+    # skip if delegated balance == 0
+    if float(s["balance"]) == 0:
+        print(f'Skipping {s["public_key"]} since balance is {s["balance"]}')
+        continue
     
     payouts.append({
         "publicKey":
