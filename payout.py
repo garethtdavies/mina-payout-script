@@ -17,10 +17,10 @@ client = Mongo.Mongo()
 # Define the payout calculation here
 ################################################################
 public_key = "B62qpge4uMq4Vv5Rvc8Gw9qSquUYd6xoW1pz7HQkMSHm6h1o7pvLPAN"  # Public key of the block producer
-ledger_hash = "jwZo52UWRRqX6Uj8kSuBbvDWDQAiLpuZBWSAdFNGHq73J7a9Rie"  # The ledger hash to use for calculations
+ledger_hash = "jwkHcod9dcnhGfYx7t6yabSfckrKVwD6TJECs6oPSL8teYQE37Y"  # The ledger hash to use for calculations
 staking_epoch = 0  # To ensure we only get blocks from the current staking epoch as the ledger may be different
 fee = 0.05  # The fee percentage to charge
-min_height = 602  # This can be the last known payout or this could vary the query to be a starting date
+min_height = 1  # This can be the last known payout or this could vary the query to be a starting date
 confirmations = 0  # Can set this to any value for min confirmations up to `k`
 
 # Get the latest block height from MinaExplorer
@@ -61,10 +61,15 @@ if not staking_ledger["data"]["stakes"]:
 for s in staking_ledger["data"]["stakes"]:
     
     # Clean up timed weighting if no timing info
-    if not s["timing"]:
+    if not s["timing"] or not s["timing"]["timed_weighting"]:
         timed_weighting = 1
     else:
         timed_weighting = s["timing"]["timed_weighting"]
+    
+    # skip if delegated balance == 0
+    if float(s["balance"]) == 0:
+        print(f'Skipping {s["public_key"]} since balance is {s["balance"]}')
+        continue
     
     payouts.append({
         "publicKey":
@@ -125,7 +130,7 @@ for b in blocks["data"]["blocks"]:
     total_rewards = int(b["transactions"]["coinbase"]) + int(
         b["txFees"]) - int(b["snarkFees"])
 
-    total_fees = int(0.05 * total_rewards)
+    total_fees = int(fee * total_rewards)
 
     all_blocks_total_rewards += total_rewards
     all_blocks_total_fees += total_fees
@@ -211,7 +216,7 @@ print("That is " +
                         format=Currency.CurrencyFormat.NANO).decimal_format() +
       " mina")
 
-print(f"Our fee is is " +
+print(f"Our fee is " +
       Currency.Currency(all_blocks_total_fees,
                         format=Currency.CurrencyFormat.NANO).decimal_format() +
       " mina")
