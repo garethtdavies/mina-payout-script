@@ -130,7 +130,7 @@ for b in blocks["data"]["blocks"]:
     total_rewards = int(b["transactions"]["coinbase"]) + int(
         b["txFees"]) - int(b["snarkFees"])
 
-    total_fees = int(0.05 * total_rewards)
+    total_fees = int(fee * total_rewards)
 
     all_blocks_total_rewards += total_rewards
     all_blocks_total_fees += total_fees
@@ -216,7 +216,7 @@ print("That is " +
                         format=Currency.CurrencyFormat.NANO).decimal_format() +
       " mina")
 
-print(f"Our fee is is " +
+print(f"Our fee is " +
       Currency.Currency(all_blocks_total_fees,
                         format=Currency.CurrencyFormat.NANO).decimal_format() +
       " mina")
