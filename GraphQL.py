@@ -57,7 +57,7 @@ def getStakingLedger(variables):
 }
 '''
 
-    return (_graphql_request(query, variables))
+    return _graphql_request(query, variables)
 
 
 def getBlocks(variables):
@@ -94,7 +94,24 @@ def getBlocks(variables):
   }
 }
 """
-    return (_graphql_request(query, variables))
+    return _graphql_request(query, variables)
+
+
+def getLedgerHash():
+    query = """query {
+  block {
+    protocolState {
+      consensusState {
+        stakingEpochData {
+          ledger {
+            hash
+          }
+        }
+      }
+    }
+  }
+}"""
+    return _graphql_request(query)
 
 
 def getLatestHeight():
@@ -103,5 +120,4 @@ def getLatestHeight():
     blockHeight
   }
 }"""
-
-    return (_graphql_request(query))
+    return _graphql_request(query)
