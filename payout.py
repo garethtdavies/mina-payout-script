@@ -20,8 +20,8 @@ client = Mongo.Mongo()
 # Define the payout calculation here
 ################################################################
 public_key = "B62qpge4uMq4Vv5Rvc8Gw9qSquUYd6xoW1pz7HQkMSHm6h1o7pvLPAN"  # Public key of the block producer
-ledger_hash = "jwAAZcXndLYxb8w4LTU2d4K1qT3dL8Ck2jKzVEf9t9GAyXweQRG"  # The ledger hash to use for calculations
-staking_epoch = 2  # To ensure we only get blocks from the current staking epoch as the ledger may be different
+# ledger_hash = "jwkHcod9dcnhGfYx7t6yabSfckrKVwD6TJECs6oPSL8teYQE37Y"  # The ledger hash to use for calculations
+staking_epoch = 0  # To ensure we only get blocks from the current staking epoch as the ledger may be different
 fee = 0.05  # The fee percentage to charge
 min_height = 0  # This can be the last known payout or this could vary the query to be a starting date
 confirmations = 15  # Can set this to any value for min confirmations up to `k`
@@ -34,7 +34,16 @@ foundation_delegations = [
 ]  # Could determine this from an API / predefined list but hardcoded for development
 coinbase = 720000000000  # Later we can set this dynamically - this is because we don't care about supercharged for Foundation
 
-# Get the latest block height
+try:
+    ledger_hash = GraphQL.getLedgerHash()
+    ledger_hash = ledger_hash["data"]["block"] \
+                             ["protocolState"]["consensusState"] \
+                             ["stakingEpochData"]["ledger"]["hash"]
+except Exception as e:
+    print(e)
+    exit("Issue getting ledger_hash from GraphQL")
+
+# Get the latest block height from MinaExplorer
 latest_block = GraphQL.getLatestHeight()
 
 if not latest_block:
