@@ -6,10 +6,10 @@ def _graphql_request(query: str, variables: dict = {}):
 
     Arguments:
         query {str} -- A GraphQL Query
-    
+
     Keyword Arguments:
         variables {dict} -- Optional Variables for the GraphQL Query (default: {{}})
-    
+
     Raises:
         Exception: Raises an exception if the response is anything other than 200.
     
@@ -36,7 +36,7 @@ def _graphql_request(query: str, variables: dict = {}):
 
 
 def getStakingLedger(variables):
-    """Return the staking ledger"""
+    """Return the staking ledger."""
     query = '''query($delegate: String!, $ledgerHash: String!){
   stakes(query: {delegate: $delegate, ledgerHash: $ledgerHash}, limit: 1000) {
     public_key
@@ -62,7 +62,7 @@ def getStakingLedger(variables):
 
 
 def getBlocks(variables):
-    """Returns all blocks the pool won"""
+    """Returns all blocks the pool won."""
     query = """query($creator: String!, $epoch: Int, $blockHeightMin: Int, $blockHeightMax: Int, $dateTimeMin: DateTime, $dateTimeMax: DateTime){
   blocks(query: {creator: $creator, protocolState: {consensusState: {epoch: $epoch}}, canonical: true, blockHeight_gte: $blockHeightMin, blockHeight_lte: $blockHeightMax, dateTime_gte:$dateTimeMin, dateTime_lte:$dateTimeMax, transactions: {userCommands: {from_ne: $creator}}, snarkJobs: {prover_ne: $creator}}, sortBy: DATETIME_DESC) {
     blockHeight
@@ -89,6 +89,7 @@ def getBlocks(variables):
       feeTransfer {
         fee
         recipient
+        type
       }
     }
   }
