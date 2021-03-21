@@ -171,7 +171,7 @@ for b in blocks["data"]["blocks"]:
 
     # Sum all the fee transfers to this account with type of fee_transfer - these are the tx fees
     fee_transfer_to_creator = list(
-        filter(lambda d: d['recipient'] in coinbase_receiver, fee_transfers))
+        filter(lambda d: d['recipient'] in [coinbase_receiver], fee_transfers))
     total_fee_transfers_to_creator = sum(
         int(item['fee']) for item in fee_transfer_to_creator)
 
