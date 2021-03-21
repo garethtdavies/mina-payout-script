@@ -158,10 +158,11 @@ for b in blocks["data"]["blocks"]:
     # FEE TRANSFERS
     ####################################
     fee_transfers = list(
-        filter(lambda d: d['type'] in ["Fee_transfer"],
+        filter(lambda d: d['type'] == "Fee_transfer",
                b["transactions"]["feeTransfer"]))
+
     fee_transfers_by_coinbase = list(
-        filter(lambda d: d['type'] in ["Fee_transfer_via_coinbase"],
+        filter(lambda d: d['type'] == "Fee_transfer_via_coinbase",
                b["transactions"]["feeTransfer"]))
 
     total_fee_transfers = sum(int(item['fee']) for item in fee_transfers)
@@ -171,7 +172,7 @@ for b in blocks["data"]["blocks"]:
 
     # Sum all the fee transfers to this account with type of fee_transfer - these are the tx fees
     fee_transfer_to_creator = list(
-        filter(lambda d: d['recipient'] in [coinbase_receiver], fee_transfers))
+        filter(lambda d: d['recipient'] == coinbase_receiver, fee_transfers))
     total_fee_transfers_to_creator = sum(
         int(item['fee']) for item in fee_transfer_to_creator)
 
@@ -196,6 +197,8 @@ for b in blocks["data"]["blocks"]:
         b["transactions"]["coinbase"]
     ) + total_fee_transfers_to_creator - fee_transfer_to_snarkers - fee_transfer_for_coinbase
 
+    #print(total_fee_transfers_to_creator,fee_transfer_to_snarkers,fee_transfer_for_coinbase)
+
     # We calculate rewards multiple ways to sense check
     assert (total_rewards == total_rewards_prev_method)
 
@@ -212,6 +215,7 @@ for b in blocks["data"]["blocks"]:
     # as we share all these rewards. We first work out the Foundation
     # payments and then subtract from the total rewards before sharing
     # the remainder among the pool
+    #######################################################
 
     for p in payouts:
 
