@@ -1,10 +1,10 @@
 ## MinaExplorer Payout Script
 
-This implementation relies on data from Minaexplorer.com. A more generally applicable version that takes in a staking ledger and uses the archive node is available here https://github.com/jrwashburn/mina-pool-payout and is strongly recommended.
+This implementation relies on data from minaexplorer.com. A more generally applicable version that takes in a staking ledger and uses the archive node is available here https://github.com/jrwashburn/mina-pool-payout and is **strongly** recommended. Additional sources for this script will be available soon. The algorithms slightly differ so the outputs from both scripts may not be exactly equal but should be close enough to compare.
 
-This is a proof of concept implementation of this [staking calculation](https://docs.minaexplorer.com/minaexplorer/calculating-payments). 
+This is a proof of concept implementation of this [staking calculation](https://docs.minaexplorer.com/minaexplorer/calculating-payments).
 
-To run, change the settings to your requirements in `payout.py` specifying at least a public key and ledger hash. It uses a fee of 5% but update if yours is different.
+To run, change the settings to your requirements in `payout.py` specifying at least a public key and ledger hash. It will only work for one epoch at a time. It uses a fee of 5% but update if yours is different.
 
 ```
 pip3 install -r requirements.txt
