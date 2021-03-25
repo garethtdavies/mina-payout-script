@@ -1,9 +1,10 @@
 ################################################################
-# This is a testnet implementation of the payout system listed at
+# This is a POC implementation of the payout system listed at
 # https://docs.minaexplorer.com/minaexplorer/calculating-payments
 # It is not meant for production use. This will output or store the
 # payments which must then be processed seperately e.g. by signing
-# the tx using coda sdk and then broadcasting.
+# the tx using coda sdk and then broadcasting. A better implementation is
+# at https://github.com/jrwashburn/mina-pool-payout and recommended
 ################################################################
 
 from tabulate import tabulate
@@ -48,7 +49,7 @@ assert max_height <= latest_block["data"]["blocks"][0]["blockHeight"]
 
 print(f"This script will payout from blocks {min_height} to {max_height}")
 
-# Initialize some stuff
+# Initialize variables
 total_staking_balance = 0
 total_staking_balance_foundation = 0
 payouts = []
@@ -72,7 +73,7 @@ if not staking_ledger["data"]["stakes"]:
 
 for s in staking_ledger["data"]["stakes"]:
 
-    # Clean up timed weighting if no timing info
+    # Clean up timed weighting if no timing info as then they are untimed
     if not s["timing"]:
         timed_weighting = 1
     else:
