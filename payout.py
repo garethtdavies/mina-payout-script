@@ -63,7 +63,6 @@ try:
     staking_ledger = GraphQL.getStakingLedger({
         "delegate": public_key,
         "ledgerHash": ledger_hash,
-        "epoch": staking_epoch
     })
 except Exception as e:
     print(e)

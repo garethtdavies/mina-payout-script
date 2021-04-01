@@ -37,8 +37,8 @@ def _graphql_request(query: str, variables: dict = {}):
 
 def getStakingLedger(variables):
     """Return the staking ledger."""
-    query = '''query($delegate: String!, $ledgerHash: String!, $epoch: Int!){
-  stakes(query: {delegate: $delegate, ledgerHash: $ledgerHash, epoch: $epoch}, limit: 1000) {
+    query = '''query($delegate: String!, $ledgerHash: String!){
+  stakes(query: {delegate: $delegate, ledgerHash: $ledgerHash}, limit: 1000) {
     public_key
     balance
     epoch
