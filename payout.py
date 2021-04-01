@@ -194,7 +194,7 @@ for b in blocks["data"]["blocks"]:
     # Can also define this via fee transfers
     total_rewards = int(
         b["transactions"]["coinbase"]
-    ) + total_fee_transfers_to_creator - fee_transfer_to_snarkers - fee_transfer_for_coinbase
+    ) + total_fee_transfers_to_creator - fee_transfer_for_coinbase
 
     #print(total_fee_transfers_to_creator,fee_transfer_to_snarkers,fee_transfer_for_coinbase)
 
