@@ -24,7 +24,7 @@ ledger_hash = "jx7buQVWFLsXTtzRgSxbYcT8EYLS8KCZbLrfDcJxMtyy4thw2Ee"  # The ledge
 staking_epoch = 0  # To ensure we only get blocks from the current staking epoch as the ledger may be different
 fee = 0.05  # The fee percentage to charge
 min_height = 0  # This can be the last known payout or this could vary the query to be a starting date
-confirmations = 12  # Can set this to any value for min confirmations up to `k`
+confirmations = 15  # Can set this to any value for min confirmations up to `k`
 store = False  # Do we want to store this
 foundation_delegations = [
     "B62qmsYXFNNE565yv7bEMPsPnpRCsMErf7J2v5jMnuKQ1jgwZS8BzXS",
