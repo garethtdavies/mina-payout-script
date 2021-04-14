@@ -41,7 +41,6 @@ def getStakingLedger(variables):
   stakes(query: {delegate: $delegate, ledgerHash: $ledgerHash}, limit: 1000) {
     public_key
     balance
-    epoch
     chainId
     timing {
       cliff_amount
