@@ -20,11 +20,12 @@ client = Mongo.Mongo()
 # Define the payout calculation here
 ################################################################
 public_key = "B62qpge4uMq4Vv5Rvc8Gw9qSquUYd6xoW1pz7HQkMSHm6h1o7pvLPAN"  # Public key of the block producer
-ledger_hash = "jwAAZcXndLYxb8w4LTU2d4K1qT3dL8Ck2jKzVEf9t9GAyXweQRG"  # The ledger hash to use for calculations
+latest_block  = 0 # If this is 0 it will get the latest height from MinaExplorer, else will use this as the latest height
 staking_epoch = 2  # To ensure we only get blocks from the current staking epoch as the ledger may be different
+latest_block  = False # If not set will get the latest block from MinaExplorer or fix the latest height here
 fee = 0.05  # The fee percentage to charge
 min_height = 0  # This can be the last known payout or this could vary the query to be a starting date
-confirmations = 15  # Can set this to any value for min confirmations up to `k`
+confirmations = 15  # Can set this to any value for min confirmations up to `k`. 15 is recommended.
 store = False  # Do we want to store this
 foundation_delegations = [
     "B62qmsYXFNNE565yv7bEMPsPnpRCsMErf7J2v5jMnuKQ1jgwZS8BzXS",
@@ -34,8 +35,22 @@ foundation_delegations = [
 ]  # Could determine this from an API / predefined list but hardcoded for development
 coinbase = 720000000000  # Later we can set this dynamically - this is because we don't care about supercharged for Foundation
 
-# Get the latest block height
-latest_block = GraphQL.getLatestHeight()
+# Determine the ledger hash from GraphQL. As we know the staking epoch we can get any block in the epoch
+try:
+    ledger_hash = GraphQL.getLedgerHash(epoch=staking_epoch)
+    ledger_hash = ledger_hash["data"]["blocks"][0] \
+                             ["protocolState"]["consensusState"] \
+                             ["stakingEpochData"]["ledger"]["hash"]
+    print(f"Using ledger hash: {ledger_hash}")
+except Exception as e:
+    print(e)
+    exit("Issue getting ledger_hash from GraphQL")
+
+if not latest_block:
+    # Get the latest block height
+    latest_block = GraphQL.getLatestHeight()
+else:
+    latest_block = {'data': {'blocks': [{'blockHeight': latest_block}]}}
 
 if not latest_block:
     exit("Issue getting the latest height")
@@ -334,7 +349,7 @@ if store:
 # Print some helpful data to the screen
 ################################################################
 
-print(f"We won these blocks: {blocks_included}")
+print(f"We won these {len(blocks_included)} blocks: {blocks_included}")
 
 print(f"We are paying out {all_blocks_total_rewards} nanomina in this window.")
 
