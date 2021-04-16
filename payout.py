@@ -20,7 +20,6 @@ client = Mongo.Mongo()
 # Define the payout calculation here
 ################################################################
 public_key = "B62qpge4uMq4Vv5Rvc8Gw9qSquUYd6xoW1pz7HQkMSHm6h1o7pvLPAN"  # Public key of the block producer
-latest_block  = 0 # If this is 0 it will get the latest height from MinaExplorer, else will use this as the latest height
 staking_epoch = 2  # To ensure we only get blocks from the current staking epoch as the ledger may be different
 latest_block  = False # If not set will get the latest block from MinaExplorer or fix the latest height here
 fee = 0.05  # The fee percentage to charge
