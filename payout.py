@@ -21,13 +21,11 @@ client = Mongo.Mongo()
 ################################################################
 public_key = "B62qpge4uMq4Vv5Rvc8Gw9qSquUYd6xoW1pz7HQkMSHm6h1o7pvLPAN"  # Public key of the block producer
 latest_block  = 0 # If this is 0 it will get the latest height from MinaExplorer, else will use this as the latest height
-# ledger_hash = "jwkHcod9dcnhGfYx7t6yabSfckrKVwD6TJECs6oPSL8teYQE37Y"  # The ledger hash to use for calculations
-staking_epoch = 0  # To ensure we only get blocks from the current staking epoch as the ledger may be different
-latest_block  = 0
+staking_epoch = 2  # To ensure we only get blocks from the current staking epoch as the ledger may be different
+latest_block  = False # If not set will get the latest block from MinaExplorer or fix the latest height here
 fee = 0.05  # The fee percentage to charge
 min_height = 0  # This can be the last known payout or this could vary the query to be a starting date
-confirmations = 15  # Can set this to any value for min confirmations up to `k`
-store = False  # Do we want to store this
+confirmations = 15  # Can set this to any value for min confirmations up to `k`. 15 is recommended.
 foundation_delegations = [
     "B62qmsYXFNNE565yv7bEMPsPnpRCsMErf7J2v5jMnuKQ1jgwZS8BzXS",
     "B62qn71s63yywMUCcFhP4iCata7HpgyrvmGjpKa1D9544vGW6FBZ6a1",
@@ -47,7 +45,7 @@ except Exception as e:
     print(e)
     exit("Issue getting ledger_hash from GraphQL")
 
-if latest_block == 0:
+if not latest_block:
     # Get the latest block height
     latest_block = GraphQL.getLatestHeight()
 else:
