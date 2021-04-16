@@ -26,6 +26,7 @@ latest_block  = False # If not set will get the latest block from MinaExplorer o
 fee = 0.05  # The fee percentage to charge
 min_height = 0  # This can be the last known payout or this could vary the query to be a starting date
 confirmations = 15  # Can set this to any value for min confirmations up to `k`. 15 is recommended.
+store = False  # Do we want to store this
 foundation_delegations = [
     "B62qmsYXFNNE565yv7bEMPsPnpRCsMErf7J2v5jMnuKQ1jgwZS8BzXS",
     "B62qn71s63yywMUCcFhP4iCata7HpgyrvmGjpKa1D9544vGW6FBZ6a1",
