@@ -21,7 +21,7 @@ client = Mongo.Mongo()
 ################################################################
 public_key = "B62qpge4uMq4Vv5Rvc8Gw9qSquUYd6xoW1pz7HQkMSHm6h1o7pvLPAN"  # Public key of the block producer
 staking_epoch = 2  # To ensure we only get blocks from the current staking epoch as the ledger may be different
-latest_block  = False # If not set will get the latest block from MinaExplorer or fix the latest height here
+latest_block = False  # If not set will get the latest block from MinaExplorer or fix the latest height here
 fee = 0.05  # The fee percentage to charge
 min_height = 0  # This can be the last known payout or this could vary the query to be a starting date
 confirmations = 15  # Can set this to any value for min confirmations up to `k`. 15 is recommended.
@@ -61,7 +61,9 @@ max_height = latest_block["data"]["blocks"][0]["blockHeight"] - confirmations
 
 assert max_height <= latest_block["data"]["blocks"][0]["blockHeight"]
 
-print(f"This script will payout from blocks {min_height} to {max_height}")
+print(
+    f"This script will payout from blocks {min_height} to {max_height} in epoch {staking_epoch}"
+)
 
 # Initialize variables
 total_staking_balance = 0
@@ -69,8 +71,8 @@ total_staking_balance_foundation = 0
 payouts = []
 all_blocks_total_rewards = 0
 all_blocks_total_fees = 0
-blocks_included = []
 store_payout = []
+blocks_table = []
 
 # Get the staking ledger for an epoch
 try:
@@ -162,9 +164,6 @@ for b in blocks["data"]["blocks"]:
     coinbase_receiver = b["transactions"]["coinbaseReceiverAccount"][
         "publicKey"]
 
-    # Keep a log of all blocks we processed
-    blocks_included.append(b["blockHeight"])
-
     # This is to keep track of non-Foundation delegates
     sum_effective_pool_stakes = 0
     effective_pool_stakes = {}
@@ -197,8 +196,10 @@ for b in blocks["data"]["blocks"]:
     # Determine the supercharged weighting for the block
 
     # New way uses fee transfers so we share the resulting profitability of the tx and take into account the coinbase snark
-    supercharged_weighting = 1 + (
-        1 / (1 + (int(total_fee_transfers_to_creator) - int(fee_transfer_to_snarkers)) / (int(b["transactions"]["coinbase"]) - int(fee_transfer_for_coinbase))))
+    supercharged_weighting = 1 + (1 / (
+        1 +
+        (int(total_fee_transfers_to_creator) - int(fee_transfer_to_snarkers)) /
+        (int(b["transactions"]["coinbase"]) - int(fee_transfer_for_coinbase))))
 
     # What are the rewards for the block - this is how we used to calculate it
     # this serves as a sense check currently to check logic
@@ -209,6 +210,12 @@ for b in blocks["data"]["blocks"]:
     total_rewards = int(
         b["transactions"]["coinbase"]
     ) + total_fee_transfers_to_creator - fee_transfer_for_coinbase
+
+    blocks_table.append([
+        b['blockHeight'], supercharged_weighting,
+        b["transactions"]["coinbase"], total_fee_transfers_to_creator,
+        fee_transfer_to_snarkers, fee_transfer_for_coinbase
+    ])
 
     #print(total_fee_transfers_to_creator,fee_transfer_to_snarkers,fee_transfer_for_coinbase)
 
@@ -348,7 +355,16 @@ if store:
 # Print some helpful data to the screen
 ################################################################
 
-print(f"We won these {len(blocks_included)} blocks: {blocks_included}")
+print(f"We won these {len(blocks_table)} blocks:")
+
+print(
+    tabulate(blocks_table,
+             headers=[
+                 "BlockHeight", "Supercharged Weighting", "Coinbase",
+                 "Producer Fee Transfers", "Snark Fee Transfers",
+                 "Coinbase Fee Transfers"
+             ],
+             tablefmt="pretty"))
 
 print(f"We are paying out {all_blocks_total_rewards} nanomina in this window.")
 
@@ -386,5 +402,5 @@ print(
              ],
              tablefmt="pretty"))
 
-# This is the payout json we are taking the the next stage to sign. So store this somewhere.
-print(payout_json)
+# TIf you want, output the payout json to take to the next stage to sign or use output from table above
+#print(payout_json)
