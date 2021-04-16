@@ -20,6 +20,7 @@ client = Mongo.Mongo()
 # Define the payout calculation here
 ################################################################
 public_key = "B62qpge4uMq4Vv5Rvc8Gw9qSquUYd6xoW1pz7HQkMSHm6h1o7pvLPAN"  # Public key of the block producer
+latest_block  = 0 # If this is 0 it will get the latest height from MinaExplorer, else will use this as the latest height
 # ledger_hash = "jwkHcod9dcnhGfYx7t6yabSfckrKVwD6TJECs6oPSL8teYQE37Y"  # The ledger hash to use for calculations
 staking_epoch = 0  # To ensure we only get blocks from the current staking epoch as the ledger may be different
 latest_block  = 0
@@ -35,12 +36,13 @@ foundation_delegations = [
 ]  # Could determine this from an API / predefined list but hardcoded for development
 coinbase = 720000000000  # Later we can set this dynamically - this is because we don't care about supercharged for Foundation
 
+# Determine the ledger hash from GraphQL. As we know the staking epoch we can get any block in the epoch
 try:
-    ledger_hash = GraphQL.getLedgerHash(epoch=staking_epoch, block_height=latest_block)
-    print(ledger_hash)
+    ledger_hash = GraphQL.getLedgerHash(epoch=staking_epoch)
     ledger_hash = ledger_hash["data"]["blocks"][0] \
                              ["protocolState"]["consensusState"] \
                              ["stakingEpochData"]["ledger"]["hash"]
+    print(f"Using ledger hash: {ledger_hash}")
 except Exception as e:
     print(e)
     exit("Issue getting ledger_hash from GraphQL")
@@ -348,7 +350,7 @@ if store:
 # Print some helpful data to the screen
 ################################################################
 
-print(f"We won these blocks: {blocks_included}")
+print(f"We won these {len(blocks_included)} blocks: {blocks_included}")
 
 print(f"We are paying out {all_blocks_total_rewards} nanomina in this window.")
 

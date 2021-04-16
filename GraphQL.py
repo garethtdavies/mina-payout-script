@@ -97,9 +97,9 @@ def getBlocks(variables):
     return _graphql_request(query, variables)
 
 
-def getLedgerHash(epoch: int, block_height: int) -> dict:
-    query = """query ($epoch: Int, $blockHeight: Int) {
-  blocks(sortBy: DATETIME_DESC, query: {protocolState: {consensusState: {epoch: $epoch}}, blockHeight: $blockHeight}, limit: 1) {
+def getLedgerHash(epoch: int) -> dict:
+    query = """query ($epoch: Int) {
+  blocks(sortBy: BLOCKHEIGHT_DESC, query: {canonical: true, protocolState: {consensusState: {epoch: $epoch}}}, limit: 1) {
     protocolState {
       consensusState {
         stakingEpochData {
@@ -113,8 +113,7 @@ def getLedgerHash(epoch: int, block_height: int) -> dict:
   }
 }"""
     variables = {
-        "epoch": epoch,
-        "$blockHeight": block_height
+        "epoch": epoch
     }
     return _graphql_request(query, variables)
 
