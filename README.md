@@ -1,6 +1,6 @@
 ## MinaExplorer Payout Script
 
-This implementation relies on data from minaexplorer.com. A more generally applicable version that takes in a staking ledger and uses the archive node is available here https://github.com/jrwashburn/mina-pool-payout and is **strongly** recommended. Additional sources for this script will be available soon. The algorithms slightly differ so the outputs from both scripts may not be exactly equal but should be close enough to compare.
+This implementation relies on data from minaexplorer.com. A more generally applicable version that takes in a staking ledger and uses the archive node is available here https://github.com/jrwashburn/mina-pool-payout and is **strongly** recommended. The algorithms slightly differ so the outputs from both scripts may not be exactly equal but should be close enough to compare.
 
 THIS WILL NOT CALCULATE THE FOUNDATION SHARE CORRECTLY IF YOU HAVE A FEE DIFFERENT THAN 5%
 
