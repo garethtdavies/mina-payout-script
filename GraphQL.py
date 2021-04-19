@@ -99,7 +99,7 @@ def getBlocks(variables):
 
 def getLedgerHash(epoch: int) -> dict:
     query = """query ($epoch: Int) {
-  blocks(sortBy: BLOCKHEIGHT_DESC, query: {canonical: true, protocolState: {consensusState: {epoch: $epoch}}}, limit: 1) {
+  blocks(query: {canonical: true, protocolState: {consensusState: {epoch: $epoch}}}, limit: 1) {
     protocolState {
       consensusState {
         stakingEpochData {
