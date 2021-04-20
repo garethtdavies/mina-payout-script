@@ -197,8 +197,7 @@ for b in blocks["data"]["blocks"]:
 
     # New way uses fee transfers so we share the resulting profitability of the tx and take into account the coinbase snark
     supercharged_weighting = 1 + (1 / (
-        1 +
-        (int(total_fee_transfers_to_creator) - int(fee_transfer_to_snarkers)) /
+        1 + int(total_fee_transfers_to_creator) /
         (int(b["transactions"]["coinbase"]) - int(fee_transfer_for_coinbase))))
 
     # What are the rewards for the block - this is how we used to calculate it
