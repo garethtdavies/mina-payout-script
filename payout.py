@@ -159,7 +159,7 @@ for b in blocks["data"]["blocks"]:
         print(
             f"{b['blockHeight']} didn't have a coinbase so won it but no rewards."
         )
-        break
+        continue
 
     coinbase_receiver = b["transactions"]["coinbaseReceiverAccount"][
         "publicKey"]
