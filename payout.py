@@ -13,6 +13,7 @@ import GraphQL
 import Mongo
 import os
 import math
+import csv
 
 client = Mongo.Mongo()
 
@@ -20,7 +21,7 @@ client = Mongo.Mongo()
 # Define the payout calculation here
 ################################################################
 public_key = "B62qpge4uMq4Vv5Rvc8Gw9qSquUYd6xoW1pz7HQkMSHm6h1o7pvLPAN"  # Public key of the block producer
-staking_epoch = 2  # To ensure we only get blocks from the current staking epoch as the ledger may be different
+staking_epoch = 6  # To ensure we only get blocks from the current staking epoch as the ledger may be different
 latest_block = False  # If not set will get the latest block from MinaExplorer or fix the latest height here
 fee = 0.05  # The fee percentage to charge
 min_height = 0  # This can be the last known payout or this could vary the query to be a starting date
@@ -380,18 +381,39 @@ print("Our fee is " +
 payout_table = []
 payout_json = []
 
-for p in payouts:
-    payout_table.append([
-        p["publicKey"],
-        Currency.Currency(
-            p["staking_balance"],
-            format=Currency.CurrencyFormat.WHOLE).decimal_format(), p["total"],
-        Currency.Currency(
-            p["total"], format=Currency.CurrencyFormat.NANO).decimal_format(),
-        p["foundation_delegation"]
+# Store the payout output in a csv named payout.csv
+with open('payout.csv', mode='w') as payout_csv:
+
+    payout_writer = csv.writer(payout_csv,
+                               delimiter=',',
+                               quotechar='"',
+                               quoting=csv.QUOTE_MINIMAL)
+
+    # Add a csv header
+    payout_writer.writerow([
+        "PublicKey", "Staking Balance", "Payout Nanomina", "Payout Mina",
+        "Foundation"
     ])
 
-    payout_json.append({"publicKey": p["publicKey"], "total": p["total"]})
+    for p in payouts:
+
+        output_data = [
+            p["publicKey"],
+            Currency.Currency(
+                p["staking_balance"],
+                format=Currency.CurrencyFormat.WHOLE).decimal_format(),
+            p["total"],
+            Currency.Currency(
+                p["total"],
+                format=Currency.CurrencyFormat.NANO).decimal_format(),
+            p["foundation_delegation"]
+        ]
+
+        payout_table.append(output_data)
+        payout_writer.writerow(output_data)
+
+        # Simple output to be passed to a script to make payments
+        payout_json.append({"publicKey": p["publicKey"], "total": p["total"]})
 
 print(
     tabulate(payout_table,
@@ -401,5 +423,5 @@ print(
              ],
              tablefmt="pretty"))
 
-# TIf you want, output the payout json to take to the next stage to sign or use output from table above
+# If you want, output the payout json to take to the next stage to sign or use output from table above
 #print(payout_json)
