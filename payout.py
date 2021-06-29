@@ -20,7 +20,7 @@ client = Mongo.Mongo()
 # Define the payout calculation here
 ################################################################
 public_key = "B62qpge4uMq4Vv5Rvc8Gw9qSquUYd6xoW1pz7HQkMSHm6h1o7pvLPAN"  # Public key of the block producer
-staking_epoch = 2  # To ensure we only get blocks from the current staking epoch as the ledger may be different
+staking_epoch = 7  # To ensure we only get blocks from the current staking epoch as the ledger may be different
 latest_block = False  # If not set will get the latest block from MinaExplorer or fix the latest height here
 fee = 0.05  # The fee percentage to charge
 min_height = 0  # This can be the last known payout or this could vary the query to be a starting date
@@ -384,7 +384,7 @@ for p in payouts:
     payout_table.append([
         p["publicKey"],
         Currency.Currency(
-            p["staking_balance"],
+            "{:.9f}".format(p["staking_balance"]),
             format=Currency.CurrencyFormat.WHOLE).decimal_format(), p["total"],
         Currency.Currency(
             p["total"], format=Currency.CurrencyFormat.NANO).decimal_format(),
