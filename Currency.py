@@ -38,6 +38,8 @@ class Currency():
         elif len(segments) == 2:
             [l, r] = segments
             if len(r) <= 9:
+                if 'e' in r:
+                    r = str(float(r)).split('.')[1] # round down exponent fractions
                 return int(l + r + ('0' * (9 - len(r))))
             else:
                 raise Exception('invalid coda currency format: %s' % s)
